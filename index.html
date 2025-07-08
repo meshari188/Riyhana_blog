@@ -3,583 +3,442 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ريحانة أكتوبر</title>
+    <title>ريّحانة أكتوبر - مدونة الشعر العربي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @font-face {
-            font-family: 'Farsi';
-            src: 
-url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap');
-            font-weight: bold;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap');
+        
         body {
             font-family: 'Scheherazade New', serif;
+            background-color: #faf6f2;
         }
+        
         .title-font {
-            font-family: 'Farsi', 'Noto Nastaliq Urdu', serif;
-            font-weight: bold;
+            font-family: 'Scheherazade New', serif;
+            font-weight: 700;
+            font-size: 3rem;
         }
-        .poem-text {
-            font-family: 'Sultan', 'Scheherazade New', serif;
+        
+        .text-font {
+            font-family: 'Scheherazade New', serif;
             font-size: 1.2rem;
             line-height: 2;
         }
-        .bg-maroon {
-            background: linear-gradient(135deg, #800020 0%, #500000 100%);
+        
+        .nav-gradient {
+            background: linear-gradient(135deg, #6d1f1f 0%, #8b2c2c 50%, #a83a3a 100%);
+        }
+        
+        .poem-text {
+            white-space: pre-line;
         }
     </style>
 </head>
-<body class="bg-gray-100">
-    <!-- الشريط العلوي -->
-    <header class="bg-maroon text-white shadow-lg">
-        <div class="container mx-auto px-4 py-6">
-            <h1 class="title-font text-4xl text-center mb-2">ريّحانة 
-أكتوبر</h1>
-            <div class="flex justify-center">
-                <button id="loginBtn" class="bg-amber-700 
-hover:bg-amber-800 text-white px-4 py-2 rounded-lg transition">
-                    تسجيل الدخول
-                </button>
-            </div>
+<body class="min-h-screen flex flex-col">
+    <!-- الشريط العلوي العنابي -->
+    <nav class="nav-gradient text-white p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="title-font text-3xl md:text-4xl">ريّحانة أكتوبر</h1>
+            <button id="loginBtn" class="bg-white text-burgundy px-4 py-2 rounded-lg font-bold hover:bg-gray-100 transition">
+                تسجيل الدخول
+            </button>
         </div>
-    </header>
+    </nav>
 
-    <!-- محتوى المدونة -->
-    <main class="container mx-auto px-4 py-8">
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow container mx-auto p-4 md:p-8">
+        <div id="adminControls" class="hidden mb-6 flex justify-end space-x-3 space-x-reverse">
+            <button id="addPoemBtn" class="bg-emerald-700 text-white px-4 py-2 rounded-lg hover:bg-emerald-800 transition">
+                إضافة قصيدة جديدة
+            </button>
+        </div>
+
         <!-- جدول القصائد -->
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-            <table class="w-full text-right">
-                <thead class="bg-gray-800 text-white">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
                     <tr>
-                        <th class="py-3 px-4">عنوان القصيدة</th>
-                        <th class="py-3 px-4 w-32">تاريخ النشر</th>
-                        <th id="actionsHeader" class="py-3 px-4 w-32" 
-style="display:none;">إجراءات</th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
+                            عنوان القصيدة
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
+                            تاريخ النشر
+                        </th>
+                        <th id="actionsHeader" scope="col" class="hidden px-6 py-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
+                            الإجراءات
+                        </th>
                     </tr>
                 </thead>
-                <tbody id="poemsTable" class="divide-y divide-gray-200">
-                    <!-- سيتم ملؤها بالقصائد من localStorage -->
+                <tbody id="poemsTable" class="bg-white divide-y divide-gray-200">
+                    <!-- سيتم ملؤه بواسطة الجافاسكريبت -->
                 </tbody>
             </table>
-        </div>
-
-        <!-- زر إضافة قصيدة (يظهر للمستخدمين فقط) -->
-        <div id="addPoemBtnContainer" class="text-center mb-8" 
-style="display:none;">
-            <button id="addPoemBtn" class="bg-maroon hover:bg-amber-800 
-text-white px-6 py-3 rounded-lg text-lg font-semibold transition">
-                أضف قصيدة جديدة
-            </button>
         </div>
     </main>
 
     <!-- نافذة تسجيل الدخول -->
-    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 flex 
-items-center justify-center z-50" style="display:none;">
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-lg p-6 w-full max-w-md">
-            <h2 class="text-2xl font-bold text-center mb-6">تسجيل 
-الدخول</h2>
-            <div class="space-y-4">
+            <h2 class="text-2xl font-bold mb-4 text-right">تسجيل الدخول</h2>
+            <form id="loginForm" class="space-y-4">
                 <div>
-                    <label for="username" class="block mb-2">اسم 
-المستخدم</label>
-                    <input type="text" id="username" class="w-full px-4 
-py-2 border rounded-lg">
+                    <label for="username" class="block text-sm font-medium text-gray-700 text-right">اسم المستخدم</label>
+                    <input type="text" id="username" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-burgundy focus:border-burgundy">
                 </div>
                 <div>
-                    <label for="password" class="block mb-2">كلمة 
-المرور</label>
-                    <input type="password" id="password" class="w-full 
-px-4 py-2 border rounded-lg">
+                    <label for="password" class="block text-sm font-medium text-gray-700 text-right">كلمة المرور</label>
+                    <input type="password" id="password" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-burgundy focus:border-burgundy">
                 </div>
-                <div id="registerFields" style="display:none;">
-                    <div>
-                        <label for="newUsername" class="block mb-2">اسم 
-مستخدم جديد</label>
-                        <input type="text" id="newUsername" class="w-full 
-px-4 py-2 border rounded-lg">
-                    </div>
-                    <div>
-                        <label for="newPassword" class="block mb-2">كلمة 
-مرور جديدة</label>
-                        <input type="password" id="newPassword" 
-class="w-full px-4 py-2 border rounded-lg">
-                    </div>
+                <div class="flex justify-between pt-2">
+                    <button type="button" id="cancelLogin" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="bg-burgundy text-white px-4 py-2 rounded-lg hover:bg-burgundy-dark transition">
+                        تسجيل الدخول
+                    </button>
                 </div>
-                <div class="flex gap-2">
-                    <button id="submitLogin" class="bg-maroon text-white 
-px-4 py-2 rounded-lg flex-1">دخول</button>
-                    <button id="registerBtn" class="bg-gray-300 
-text-gray-800 px-4 py-2 rounded-lg flex-1">تسجيل</button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 
     <!-- نافذة إضافة قصيدة -->
-    <div id="poemModal" class="fixed inset-0 bg-black bg-opacity-50 flex 
-items-center justify-center z-50" style="display:none;">
-        <div class="bg-white rounded-lg p-6 w-full max-w-3xl">
-            <h2 id="poemModalTitle" class="text-2xl font-bold text-center 
-mb-6">إضافة قصيدة جديدة</h2>
-            <div class="space-y-4">
+    <div id="addPoemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-2xl">
+            <h2 class="text-2xl font-bold mb-4 text-right">إضافة قصيدة جديدة</h2>
+            <form id="poemForm" class="space-y-4">
+                <input type="hidden" id="poemId">
                 <div>
-                    <label for="poemTitle" class="block mb-2">عنوان 
-القصيدة</label>
-                    <input type="text" id="poemTitle" class="w-full px-4 
-py-2 border rounded-lg">
+                    <label for="poemTitle" class="block text-sm font-medium text-gray-700 text-right">عنوان القصيدة</label>
+                    <input type="text" id="poemTitle" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-burgundy focus:border-burgundy">
                 </div>
                 <div>
-                    <label for="poemContent" class="block mb-2">نص 
-القصيدة</label>
-                    <textarea id="poemContent" rows="10" class="w-full 
-px-4 py-2 border rounded-lg poem-text"></textarea>
+                    <label for="poemContent" class="block text-sm font-medium text-gray-700 text-right">نص القصيدة</label>
+                    <textarea id="poemContent" rows="10" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-burgundy focus:border-burgundy text-font"></textarea>
                 </div>
-                <div class="flex justify-end gap-2">
-                    <button id="cancelPoemBtn" class="bg-gray-300 
-text-gray-800 px-4 py-2 rounded-lg">إلغاء</button>
-                    <button id="savePoemBtn" class="bg-maroon text-white 
-px-4 py-2 rounded-lg">حفظ</button>
+                <div class="flex justify-between pt-2">
+                    <button type="button" id="cancelPoem" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="bg-emerald-700 text-white px-4 py-2 rounded-lg hover:bg-emerald-800 transition">
+                        حفظ القصيدة
+                    </button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 
-    <!-- نافذة عرض القصيدة -->
-    <div id="viewPoemModal" class="fixed inset-0 bg-black bg-opacity-50 
-flex items-center justify-center z-50" style="display:none;">
-        <div class="bg-white rounded-lg p-6 w-full max-w-3xl max-h-[90vh] 
-overflow-y-auto">
-            <h2 id="viewPoemTitle" class="text-2xl font-bold text-center 
-mb-4"></h2>
-            <p id="viewPoemContent" class="poem-text mb-6 
-whitespace-pre-line"></p>
+    <!-- صفحة عرض القصيدة -->
+    <div id="poemPage" class="hidden fixed inset-0 bg-white p-4 md:p-8 overflow-y-auto z-50">
+        <div class="container mx-auto max-w-4xl">
+            <button id="closePoem" class="mb-4 bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition">
+                العودة إلى القائمة
+            </button>
             
-            <!-- التعليقات -->
-            <div id="commentsSection" class="mt-8 border-t pt-4">
-                <h3 class="text-xl font-bold mb-4">التعقيبات</h3>
-                <div id="commentsList" class="space-y-4 mb-2">
-                    <!-- يتم ملؤها بالتعليقات -->
-                </div>
-                <div class="bg-gray-100 p-4 rounded-lg">
-                    <h4 class="font-bold mb-2">أضف تعليقك</h4>
-                    <div class="space-y-3">
-                        <input type="text" id="commentName" 
-placeholder="اسمك" class="w-full px-3 py-2 border rounded">
-                        <textarea id="commentText" rows="3" 
-placeholder="تعليقك" class="w-full px-3 py-2 border rounded"></textarea>
-                        <button id="submitComment" class="bg-maroon 
-text-white px-4 py-2 rounded">نشر التعليق</button>
-                    </div>
-                </div>
+            <h2 id="poemPageTitle" class="text-3xl font-bold mb-4 text-right text-burgundy"></h2>
+            <p id="poemPageDate" class="text-gray-600 mb-6 text-right"></p>
+            
+            <div id="poemPageContent" class="text-font mb-8 text-right poem-text bg-gray-50 p-6 rounded-lg shadow-inner"></div>
+            
+            <hr class="my-6">
+            
+            <h3 class="text-xl font-bold mb-4 text-right">التعليقات</h3>
+            
+            <div id="commentsSection" class="space-y-4 mb-8">
+                <!-- سيتم ملؤه بالتعليقات -->
             </div>
             
-            <div class="flex justify-end mt-4">
-                <button id="closeViewPoemBtn" class="bg-gray-300 
-text-gray-800 px-4 py-2 rounded-lg">إغلاق</button>
-            </div>
+            <form id="commentForm" class="mt-6 space-y-4">
+                <div>
+                    <label for="commenterName" class="block text-sm font-medium text-gray-700 text-right">اسمك</label>
+                    <input type="text" id="commenterName" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-burgundy focus:border-burgundy">
+                </div>
+                <div>
+                    <label for="commentText" class="block text-sm font-medium text-gray-700 text-right">تعليقك</label>
+                    <textarea id="commentText" rows="3" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-burgundy focus:border-burgundy"></textarea>
+                </div>
+                <button type="submit" class="bg-burgundy text-white px-4 py-2 rounded-lg hover:bg-burgundy-dark transition">
+                    إضافة التعليق
+                </button>
+            </form>
         </div>
     </div>
 
     <script>
-        // حالة التطبيق
-        let state = {
-            isLoggedIn: false,
-            currentUser: null,
-            users: JSON.parse(localStorage.getItem('blogUsers')) || [
-                { username: 'admin', password: 'admin123' }
-            ],
-            poems: JSON.parse(localStorage.getItem('blogPoems')) || [],
-            currentPoemId: null,
-            comments: JSON.parse(localStorage.getItem('blogComments')) || 
-{}
-        };
-
+        // تخزين البيانات
+        let poems  = JSON.parse(localStorage.getItem('poems')) || [
+            {
+                id: 1,
+                title: "في ليل الخريف",
+                content: "في ليل الخريف الحزين\nأسير وحدي في الدروب\nوالريح تهمس بألحان\nتحكي عن الزهر الذابِل\n\nيا ليل كم أنت طويل\nعلى من بقلبه الجروح\nفي ظلمتك الأشباح\nتهمس بأسماء الغياب",
+                date: "2023-10-15",
+                comments: [
+                    { name: "قارئ متيم", text: "أحسست بروح الشاعر في كل كلمة", date: "2023-10-16 14:30" },
+                    { name: "محب للشعر", text: "رائعة! تأخذك إلى عالم آخر", date: "2023-10-17 09:15" }
+                ]
+            },
+            {
+                id: 2,
+                title: "أغنية للوطن",
+                content: "يا وطن الحب والشوق\nيا منارة العروبة\nفيك عشنا وفي الدجى\nنرفع الرأس عاليا\n\nمهما بعدت أراك\nفي كل خطوة نسيرها\nفي كل نبضة قلب\nفي كل ذكرى نعيشها",
+                date: "2023-10-20",
+                comments: [
+                    { name: "مواطن غيور", text: "أحسست بحب الوطن في كل كلمة", date: "2023-10-21 18:45" }
+                ]
+            }
+        ];
+        
+        let currentUser = null;
+        let currentPoemId = null;
+        
         // عناصر DOM
-        const elements = {
-            loginBtn: document.getElementById('loginBtn'),
-            loginModal: document.getElementById('loginModal'),
-            username: document.getElementById('username'),
-            password: document.getElementById('password'),
-            submitLogin: document.getElementById('submitLogin'),
-            registerBtn: document.getElementById('registerBtn'),
-            registerFields: document.getElementById('registerFields'),
-            newUsername: document.getElementById('newUsername'),
-            newPassword: document.getElementById('newPassword'),
-            addPoemBtnContainer: 
-document.getElementById('addPoemBtnContainer'),
-            addPoemBtn: document.getElementById('addPoemBtn'),
-            poemsTable: document.getElementById('poemsTable'),
-            actionsHeader: document.getElementById('actionsHeader'),
-            poemModal: document.getElementById('poemModal'),
-            poemModalTitle: document.getElementById('poemModalTitle'),
-            poemTitle: document.getElementById('poemTitle'),
-            poemContent: document.getElementById('poemContent'),
-            savePoemBtn: document.getElementById('savePoemBtn'),
-            cancelPoemBtn: document.getElementById('cancelPoemBtn'),
-            viewPoemModal: document.getElementById('viewPoemModal'),
-            viewPoemTitle: document.getElementById('viewPoemTitle'),
-            viewPoemContent: document.getElementById('viewPoemContent'),
-            commentsSection: document.getElementById('commentsSection'),
-            commentsList: document.getElementById('commentsList'),
-            commentName: document.getElementById('commentName'),
-            commentText: document.getElementById('commentText'),
-            submitComment: document.getElementById('submitComment'),
-            closeViewPoemBtn: document.getElementById('closeViewPoemBtn')
-        };
+        const loginBtn = document.getElementById('loginBtn');
+        const loginModal = document.getElementById('loginModal');
+        const cancelLogin = document.getElementById('cancelLogin');
+        const loginForm = document.getElementById('loginForm');
+        const adminControls = document.getElementById('adminControls');
+        const actionsHeader = document.getElementById('actionsHeader');
+        const addPoemBtn = document.getElementById('addPoemBtn');
+        const addPoemModal = document.getElementById('addPoemModal');
+        const cancelPoem = document.getElementById('cancelPoem');
+        const poemForm = document.getElementById('poemForm');
+        const poemsTable = document.getElementById('poemsTable');
+        const poemPage = document.getElementById('poemPage');
+        const closePoem = document.getElementById('closePoem');
+        const poemPageTitle = document.getElementById('poemPageTitle');
+        const poemPageDate = document.getElementById('poemPageDate');
+        const poemPageContent = document.getElementById('poemPageContent');
+        const commentsSection = document.getElementById('commentsSection');
+        const commentForm = document.getElementById('commentForm');
+        
 
-        // تهيئة التطبيق
-        function init() {
-            updateLoginState();
-            renderPoems();
+      function savePoems() {
+  localStorage.setItem('poems', JSON.stringify(poems));
+}  
+        // أحداث
+        loginBtn.addEventListener('click', () => loginModal.classList.remove('hidden'));
+        cancelLogin.addEventListener('click', () => loginModal.classList.add('hidden'));
+        addPoemBtn.addEventListener('click', () => {
+            poemForm.reset();
+            document.getElementById('poemId').value = '';
+            addPoemModal.classList.remove('hidden');
+        });
+        cancelPoem.addEventListener('click', () => addPoemModal.classList.add('hidden'));
+        closePoem.addEventListener('click', () => {
+            poemPage.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // تسجيل الدخول
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
             
-            // أحداث النقر
-            elements.loginBtn.addEventListener('click', toggleLoginModal);
-            elements.submitLogin.addEventListener('click', handleLogin);
-            elements.registerBtn.addEventListener('click', 
-toggleRegister);
-            elements.addPoemBtn.addEventListener('click', () => 
-openPoemModal());
-            elements.savePoemBtn.addEventListener('click', savePoem);
-            elements.cancelPoemBtn.addEventListener('click', 
-closePoemModal);
-            elements.closeViewPoemBtn.addEventListener('click', 
-closeViewPoemModal);
-            elements.submitComment.addEventListener('click', addComment);
-            
-            // تحميل الخطوط
-            loadFonts();
-        }
-
-        // تحميل الخطوط المطلوبة
-        function loadFonts() {
-            const link = document.createElement('link');
-            link.href = 
-'https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&family=Scheherazade+New:wght@400;700&display=swap';
-            link.rel = 'stylesheet';
-            document.head.appendChild(link);
-        }
-
-        // تحديث حالة تسجيل الدخول
-        function updateLoginState() {
-            if (state.isLoggedIn) {
-                elements.loginBtn.textContent = 'تسجيل الخروج';
-                elements.addPoemBtnContainer.style.display = 'block';
-                elements.actionsHeader.style.display = 'table-cell';
-            } else {
-                elements.loginBtn.textContent = 'تسجيل الدخول';
-                elements.addPoemBtnContainer.style.display = 'none';
-                elements.actionsHeader.style.display = 'none';
-            }
-        }
-
-        // عرض القصائد في الجدول
-        function renderPoems() {
-            elements.poemsTable.innerHTML = '';
-            
-            state.poems.forEach(poem => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-gray-50';
-                tr.innerHTML = `
-                    <td class="py-3 px-4 font-medium cursor-pointer 
-poem-title">${poem.title}</td>
-                    <td class="py-3 px-4">${formatDate(poem.date)}</td>
-                    ${state.isLoggedIn ? `
-                    <td class="py-3 px-4">
-                        <button class="text-blue-600 hover:text-blue-800 
-edit-poem mr-2" data-id="${poem.id}">تعديل</button>
-                        <button class="text-red-600 hover:text-red-800 
-delete-poem" data-id="${poem.id}">حذف</button>
-                    </td>
-                    ` : ''}
-                `;
-                elements.poemsTable.appendChild(tr);
-            });
-            
-            // إضافة أحداث النقر لعناوين القصائد
-            document.querySelectorAll('.poem-title').forEach(el => {
-                el.addEventListener('click', function() {
-                    const poemTitle = this.textContent;
-                    const poem = state.poems.find(p => p.title === 
-poemTitle);
-                    if (poem) {
-                        openViewPoemModal(poem);
-                    }
-                });
-            });
-            
-            // إضافة أحداث النقر لأزرار التعديل والحذف (للمستخدمين فقط)
-            if (state.isLoggedIn) {
-                document.querySelectorAll('.edit-poem').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const poemId = this.getAttribute('data-id');
-                        const poem = state.poems.find(p => p.id === 
-poemId);
-                        if (poem) {
-                            openPoemModal(poem);
-                        }
-                    });
-                });
-                
-                document.querySelectorAll('.delete-poem').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const poemId = this.getAttribute('data-id');
-                        if (confirm('هل أنت متأكد من حذف هذه القصيدة؟')) {
-                            deletePoem(poemId);
-                        }
-                    });
-                });
-            }
-        }
-
-        // تنسيق التاريخ
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('ar-EG');
-        }
-
-        // توليد معرّف فريد
-        function generateId() {
-            return Date.now().toString(36) + 
-Math.random().toString(36).substring(2);
-        }
-
-        // فتح/إغلاق نافذة تسجيل الدخول
-        function toggleLoginModal() {
-            if (state.isLoggedIn) {
-                logout();
-            } else {
-                elements.loginModal.style.display = 'flex';
-                elements.registerFields.style.display = 'none';
-                elements.username.value = '';
-                elements.password.value = '';
-            }
-        }
-
-        // تبديل وضع التسجيل
-        function toggleRegister() {
-            if (elements.registerFields.style.display === 'none') {
-                elements.registerFields.style.display = 'block';
-                elements.registerBtn.textContent = 'لديك حساب؟';
-                elements.submitLogin.textContent = 'تسجيل';
-            } else {
-                elements.registerFields.style.display = 'none';
-                elements.registerBtn.textContent = 'تسجيل';
-                elements.submitLogin.textContent = 'دخول';
-            }
-        }
-
-        // معالجة تسجيل الدخول/التسجيل
-        function handleLogin() {
-            if (elements.registerFields.style.display === 'none') {
-                // تسجيل الدخول
-                const user = state.users.find(u => 
-                    u.username === elements.username.value && 
-                    u.password === elements.password.value
-                );
-                
-                if (user) {
-                    state.isLoggedIn = true;
-                    state.currentUser = user.username;
-                    elements.loginModal.style.display = 'none';
-                    updateLoginState();
-                    renderPoems();
-                } else {
-                    alert('اسم المستخدم أو كلمة المرور غير صحيحة');
-                }
-            } else {
-                // تسجيل جديد
-                if (!elements.newUsername.value || 
-!elements.newPassword.value) {
-                    alert('يجب إدخال اسم مستخدم وكلمة مرور جديدة');
-                    return;
-                }
-                
-                if (state.users.some(u => u.username === 
-elements.newUsername.value)) {
-                    alert('اسم المستخدم موجود مسبقًا');
-                    return;
-                }
-                
-                state.users.push({
-                    username: elements.newUsername.value,
-                    password: elements.newPassword.value
-                });
-                
-                localStorage.setItem('blogUsers', 
-JSON.stringify(state.users));
-                
-                state.isLoggedIn = true;
-                state.currentUser = elements.newUsername.value;
-                elements.loginModal.style.display = 'none';
-                updateLoginState();
+            // هنا نتحقق من صحة البيانات (في تطبيق حقيقي نتحقق من الخادوم)
+            if (username === 'meshari' && password === '1985') {
+                currentUser = { username: 'admin' };
+                loginBtn.textContent = 'تسجيل الخروج';
+                adminControls.classList.remove('hidden');
+                actionsHeader.classList.remove('hidden');
+                loginModal.classList.add('hidden');
                 renderPoems();
-                
-                alert('تم تسجيل حسابك بنجاح');
-            }
-        }
-
-        // تسجيل الخروج
-        function logout() {
-            state.isLoggedIn = false;
-            state.currentUser = null;
-            updateLoginState();
-            renderPoems();
-        }
-
-        // فتح نافذة القصيدة (لإضافة أو تعديل)
-        function openPoemModal(poem = null) {
-            if (poem) {
-                elements.poemModalTitle.textContent = 'تعديل القصيدة';
-                elements.poemTitle.value = poem.title;
-                elements.poemContent.value = poem.content;
-                state.currentPoemId = poem.id;
             } else {
-                elements.poemModalTitle.textContent = 'إضافة قصيدة جديدة';
-                elements.poemTitle.value = '';
-                elements.poemContent.value = '';
-                state.currentPoemId = null;
+                alert('اسم المستخدم أو كلمة المرور غير صحيحة');
             }
-            elements.poemModal.style.display = 'flex';
-        }
-
-        // حفظ القصيدة (جديدة أو معدلة)
-        function savePoem() {
-            const title = elements.poemTitle.value.trim();
-            const content = elements.poemContent.value.trim();
-            
-            if (!title || !content) {
-                alert('يجب إدخال عنوان ونص القصيدة');
-                return;
-            }
-            
-            if (state.currentPoemId) {
-                // تعديل قصيدة موجودة
-                const index = state.poems.findIndex(p => p.id === 
-state.currentPoemId);
-                if (index !== -1) {
-                    state.poems[index] = {
-                        ...state.poems[index],
-                        title,
-                        content
-                    };
+        });
+        
+        // نغير وظيفة زر تسجيل الدخول عندما يكون المستخدم مسجلاً
+        loginBtn.addEventListener('click', function() {
+            if (currentUser) {
+                if (confirm('هل تريد تسجيل الخروج؟')) {
+                    currentUser = null;
+                    loginBtn.textContent = 'تسجيل الدخول';
+                    adminControls.classList.add('hidden');
+                    actionsHeader.classList.add('hidden');
+                    renderPoems();
                 }
+            }
+        });
+        
+        // إدارة القصائد
+        poemForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('poemTitle').value;
+            const content = document.getElementById('poemContent').value;
+            const poemId = document.getElementById('poemId').value;
+            
+            if (poemId) {
+                // تعديل قصيدة موجودة
+                const index = poems.findIndex(p => p.id == poemId);
+                poems[index].title = title;
+                poems[index].content = content;
             } else {
                 // إضافة قصيدة جديدة
-                state.poems.push({
-                    id: generateId(),
+                const newPoem = {
+                    id: poems.length > 0 ? Math.max(...poems.map(p => p.id)) + 1 : 1,
                     title,
                     content,
-                    date: new Date().toISOString(),
-                    author: state.currentUser
+                    date: new Date().toISOString().split('T')[0],
+                    comments: []
+                };
+                poems.push(newPoem);
+            }
+            
+            addPoemModal.classList.add('hidden');
+            renderPoems();
+            savePoems();
+        });
+        
+        // عرض القصائد في الجدول
+        function renderPoems() {
+            poemsTable.innerHTML = '';
+            
+            poems.forEach(poem => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                
+                // عنوان القصيدة
+                const titleCell = document.createElement('td');
+                titleCell.className = 'px-6 py-4 text-right text-font text-lg';
+                const titleLink = document.createElement('a');
+                titleLink.href = '#';
+                titleLink.textContent = poem.title;
+                titleLink.className = 'text-burgundy hover:underline';
+                titleLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showPoem(poem.id);
                 });
-            }
-            
-            localStorage.setItem('blogPoems', 
-JSON.stringify(state.poems));
-            closePoemModal();
-            renderPoems();
-        }
-
-        // حذف القصيدة
-        function deletePoem(poemId) {
-            state.poems = state.poems.filter(p => p.id !== poemId);
-            localStorage.setItem('blogPoems', 
-JSON.stringify(state.poems));
-            renderPoems();
-            closeViewPoemModal();
-        }
-
-        // إغلاق نافذة القصيدة
-        function closePoemModal() {
-            elements.poemModal.style.display = 'none';
-        }
-
-        // فتح نافذة عرض القصيدة
-        function openViewPoemModal(poem) {
-            elements.viewPoemTitle.textContent = poem.title;
-            elements.viewPoemContent.textContent = poem.content;
-            state.currentPoemId = poem.id;
-            
-            // عرض التعليقات
-            renderComments(poem.id);
-            
-            elements.viewPoemModal.style.display = 'flex';
-        }
-
-        // عرض التعليقات للقصيدة
-        function renderComments(poemId) {
-            elements.commentsList.innerHTML = '';
-            
-            const poemComments = state.comments[poemId] || [];
-            
-            if (poemComments.length === 0) {
-                elements.commentsList.innerHTML = '<p 
-class="text-gray-500">لا توجد تعليقات بعد</p>';
-                return;
-            }
-            
-            poemComments.forEach(comment => {
-                const commentDiv = document.createElement('div');
-                commentDiv.className = 'bg-gray-50 p-3 rounded-lg';
-                commentDiv.innerHTML = `
-                    <div class="font-bold">${comment.name}</div>
-                    <div class="text-sm text-gray-500 
-mb-2">${formatDateTime(comment.date)}</div>
-                    <div>${comment.text}</div>
-                `;
-                elements.commentsList.appendChild(commentDiv);
+                titleCell.appendChild(titleLink);
+                row.appendChild(titleCell);
+                
+                // تاريخ النشر
+                const dateCell = document.createElement('td');
+                dateCell.className = 'px-6 py-4 whitespace-nowrap text-right text-gray-600';
+                dateCell.textContent = poem.date;
+                row.appendChild(dateCell);
+                
+                // إجراءات (للمستخدمين المسجلين فقط)
+                if (currentUser) {
+                    const actionsCell = document.createElement('td');
+                    actionsCell.className = 'px-6 py-4 whitespace-nowrap text-right text-sm font-medium';
+                    
+                    const editBtn = document.createElement('button');
+                    editBtn.textContent = 'تعديل';
+                    editBtn.className = 'text-blue-600 hover:text-blue-900 mr-3';
+                    editBtn.addEventListener('click', () => editPoem(poem.id));
+                    actionsCell.appendChild(editBtn);
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = 'حذف';
+                    deleteBtn.className = 'text-red-600 hover:text-red-900';
+                    deleteBtn.addEventListener('click', () => deletePoem(poem.id));
+                    actionsCell.appendChild(deleteBtn);
+                    
+                    row.appendChild(actionsCell);
+                }
+                
+                poemsTable.appendChild(row);
             });
         }
-
-        // تنسيق التاريخ والوقت
-        function formatDateTime(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleString('ar-EG');
-        }
-
-        // إضافة تعليق جديد
-        function addComment() {
-            const poemId = state.currentPoemId;
-            const name = elements.commentName.value.trim();
-            const text = elements.commentText.value.trim();
-            
-            if (!name || !text) {
-                alert('يجب إدخال اسم ونص التعليق');
-                return;
+        
+        // تعديل قصيدة
+        function editPoem(id) {
+            const poem = poems.find(p => p.id === id);
+            if (poem) {
+                document.getElementById('poemId').value = poem.id;
+                document.getElementById('poemTitle').value = poem.title;
+                document.getElementById('poemContent').value = poem.content;
+                addPoemModal.classList.remove('hidden');
             }
-            
-            if (!state.comments[poemId]) {
-                state.comments[poemId] = [];
+        }
+        
+        // حذف قصيدة
+        function deletePoem(id) {
+            if (confirm('هل أنت متأكد من حذف هذه القصيدة؟')) {
+                poems = poems.filter(p => p.id !== id);
+                savePoems();
+                renderPoems();
             }
-            
-            state.comments[poemId].push({
-                name,
-                text,
-                date: new Date().toISOString()
-            });
-            
-            localStorage.setItem('blogComments', 
-JSON.stringify(state.comments));
-            
-            elements.commentName.value = '';
-            elements.commentText.value = '';
-            
-            renderComments(poemId);
         }
-
-        // إغلاق نافذة عرض القصيدة
-        function closeViewPoemModal() {
-            elements.viewPoemModal.style.display = 'none';
-            state.currentPoemId = null;
+        
+        // عرض صفحة القصيدة
+        function showPoem(id) {
+            const poem = poems.find(p => p.id === id);
+            if (poem) {
+                currentPoemId = id;
+                poemPageTitle.textContent = poem.title;
+                poemPageDate.textContent = `نشرت في: ${poem.date}`;
+                poemPageContent.textContent = poem.content;
+                
+                // عرض التعليقات
+                commentsSection.innerHTML = '';
+                poem.comments.forEach(comment => {
+                    const commentDiv = document.createElement('div');
+                    commentDiv.className = 'bg-gray-50 p-4 rounded-lg';
+                    
+                    const nameDiv = document.createElement('div');
+                    nameDiv.className = 'font-bold text-burgundy';
+                    nameDiv.textContent = comment.name;
+                    
+                    const dateDiv = document.createElement('div');
+                    dateDiv.className = 'text-gray-500 text-sm mb-2';
+                    dateDiv.textContent = comment.date;
+                    
+                    const textDiv = document.createElement('div');
+                    textDiv.className = 'text-gray-800';
+                    textDiv.textContent = comment.text;
+                    
+                    commentDiv.appendChild(nameDiv);
+                    commentDiv.appendChild(dateDiv);
+                    commentDiv.appendChild(textDiv);
+                    
+                    commentsSection.appendChild(commentDiv);
+                });
+                
+                poemPage.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
         }
-
-        // تهيئة التطبيق عند التحميل
-        document.addEventListener('DOMContentLoaded', init);
+        
+        // إضافة تعليق
+        commentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('commenterName').value;
+            const text = document.getElementById('commentText').value;
+            
+            if (currentPoemId && name && text) {
+                const poem = poems.find(p => p.id === currentPoemId);
+                if (poem) {
+                    const now = new Date();
+                    const dateStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                    
+                    poem.comments.push({
+                        name,
+                        text,
+                        date: dateStr
+                    });
+                    savePoems();
+                    document.getElementById('commentText').value = '';
+                    showPoem(currentPoemId); // لإعادة عرض الصفحة مع التعليق الجديد
+                }
+            }
+        });
+        
+        // التهيئة الأولية
+        renderPoems();
+        
+        // تعريف ألوان tailwind مخصصة
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        burgundy: '#6d1f1f',
+                        'burgundy-dark': '#511919',
+                    }
+                }
+            }
+        }
     </script>
 </body>
 </html>
-
-
